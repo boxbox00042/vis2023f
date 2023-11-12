@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0065)https://tjhsieh.github.io/c/vis/vis2023f/hw01/src-easy/index.html -->
+<!-- saved from url=(0066)https://weber111598056.github.io/vis2023f/hw01/src-easy/index.html -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <style type="text/css">
         table, th, td {
@@ -66,7 +66,7 @@ a1 = createArray();     // [] or new Array()
 a2 = createArray(2);    // new Array(2)
 //alert(a2);
 
-a3 = createArray(10, 13); // [new Array(2),
+a3 = createArray(121, 13); // [new Array(2),
                    //  new Array(2),
                    //  new Array(2)]
 //alert(a3);
@@ -75,8 +75,48 @@ a3[0] = ['序號', '班級', '學號', '姓名', 'GitHub', '作業一', '作業�
 
 for (var i = 1; i < a3.length; i++) {
     a3[i][0] = i;
-    a3[i][1] = '電資四';
-    a3[i][2] = 112598000 + Math.floor(Math.random() * 999);
+    tmp = Math.floor(Math.random() * 999);
+    if (tmp%5 == 0) {
+        a3[i][1] = '資工系';
+    } // if
+    else if (tmp%5 == 1) {
+        a3[i][1] = '資工所';
+    } // else if
+    else if (tmp%5 == 2) {
+        a3[i][1] = '電資AI';
+    } // else if
+    else if (tmp%5 == 3) {
+        a3[i][1] = '電資資安';
+    } // else if
+    else{
+        a3[i][1] = '創新AI';
+    } // else
+
+    if (Math.random() > 0.5 ) {
+        a3[i][2] = "111"
+    } // if
+    else{
+        a3[i][2] = "112"
+    } // else
+
+    tmp = Math.floor(Math.random() * 999);
+    if (tmp%5 == 0) {
+        a3[i][2] += "590"
+    } // if
+    else if (tmp%5 == 1) {
+        a3[i][2] += "598"
+    } // else if
+    else if (tmp%5 == 2) {
+        a3[i][2] += "C52"
+    } // else if
+    else if (tmp%5 == 3) {
+        a3[i][2] += "C53"
+    } // else if
+    else{
+        a3[i][2] += "C71"
+    } // else
+
+    a3[i][2] += Math.floor(Math.random() * 999).toString().padStart(3, "0");
     //a3[i][1] = '路人甲'; // 4E00-9FFF
     //a3[i][1] = String.fromCharCode(0x6771);
     a3[i][3] = String.fromCharCode(Math.floor(Math.random() * 0x51ff + 0x4e00)) +
@@ -187,7 +227,7 @@ document.body.appendChild(table);
             temp_link.click();
             document.body.removeChild(temp_link);
         }
-    </script><table><tbody><tr><td>序號</td><td>班級</td><td>學號</td><td>姓名</td><td>GitHub</td><td>作業一</td><td>作業二</td><td>作業三</td><td>作業四</td><td>作業五</td><td>作業六</td><td>作業七</td><td>作業八</td><td>作業九</td><td>作業十</td></tr><tr><td>1</td><td>電資四</td><td>112598820</td><td>瓂蓶擘</td><td>0ppm5z4wgw</td><td>5</td><td>2</td><td>8</td><td>9</td><td>8</td><td>5</td><td>7</td><td>6</td><td>7</td><td>8</td></tr><tr><td>2</td><td>電資四</td><td>112598555</td><td>珡藒鋒</td><td>39b75wuidg</td><td>7</td><td>8</td><td>0</td><td>2</td><td>6</td><td>9</td><td>9</td><td>1</td><td>5</td><td>7</td></tr><tr><td>3</td><td>電資四</td><td>112598731</td><td>簕簣葥</td><td>k9nywm89yf</td><td>0</td><td>2</td><td>8</td><td>7</td><td>6</td><td>8</td><td>0</td><td>4</td><td>4</td><td>6</td></tr><tr><td>4</td><td>電資四</td><td>112598945</td><td>蛯絏櫣</td><td>sbmx8dls87</td><td>6</td><td>8</td><td>1</td><td>4</td><td>3</td><td>6</td><td>3</td><td>7</td><td>4</td><td>5</td></tr><tr><td>5</td><td>電資四</td><td>112598061</td><td>禪烄晃</td><td>6ftcus4u97</td><td>2</td><td>3</td><td>5</td><td>1</td><td>0</td><td>6</td><td>3</td><td>7</td><td>2</td><td>9</td></tr><tr><td>6</td><td>電資四</td><td>112598569</td><td>檕鮾偁</td><td>j3ms0s2q7h</td><td>6</td><td>1</td><td>5</td><td>5</td><td>3</td><td>9</td><td>1</td><td>5</td><td>6</td><td>3</td></tr><tr><td>7</td><td>電資四</td><td>112598388</td><td>骆夦螎</td><td>525r09qwr6</td><td>2</td><td>7</td><td>3</td><td>5</td><td>7</td><td>4</td><td>5</td><td>5</td><td>0</td><td>5</td></tr><tr><td>8</td><td>電資四</td><td>112598764</td><td>豑寷寔</td><td>a2570fvpxn</td><td>4</td><td>7</td><td>2</td><td>5</td><td>0</td><td>3</td><td>7</td><td>0</td><td>8</td><td>9</td></tr><tr><td>9</td><td>電資四</td><td>112598050</td><td>檅僅嫑</td><td>wnk63u2agv</td><td>6</td><td>9</td><td>0</td><td>2</td><td>5</td><td>9</td><td>9</td><td>4</td><td>7</td><td>1</td></tr></tbody></table>
+    </script>
 
  
 </body></html>
