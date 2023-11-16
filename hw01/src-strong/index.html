@@ -13,30 +13,29 @@ https://www.oxxostudio.tw/articles/201501/svg-d3-13-csv.html
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         /* @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@900&display=swap'); */
-
-        @font-face {
-            font-family:'CircleFont'; /* src: url(https://circle472.github.io/ct2022s/hw04/CircleFont.ttf);  https://github.com/circle472/ct2022s/ */
-            src: url(../data/font/CircleFont_v2.woff2); /* https://cloudconvert.com/ttf-to-woff2 */
-        }
+        
+  
+        /* @font-face {
+            font-family:'CircleFont';
+            src: url(../data/font/CircleFont_v2.woff2);
+        } */
 
         h3 {
-            background-color: rgba(255, 255, 0, 0.1);
             color: white; 
             text-shadow: 0 0 6px #FF0000, 0 0 6px #000000;
             font-family: 'CircleFont', 'Noto Serif JP', serif;
             font-size: 18pt;
-            border: solid 1px black;
             width: 90%;
             margin: 5px auto;
             padding: 10px;
             text-align: center;
         }
 
-        div {
-            background-color: rgba(255, 255, 0, 0.1);
-            font-family: 'CircleFont', 'Noto Serif JP', serif;
-            font-size: 16pt;
-            border: solid 1px black;
+        .rect-text {
+            fill: white;
+            text-shadow: 0 0 1px #000000, 0 0 3px #000000;
+            font-family: 'Noto Serif JP', serif;
+            font-size: 8pt;
             width: 90%;
             margin: 5px auto;
             padding: 10px;
@@ -44,7 +43,7 @@ https://www.oxxostudio.tw/articles/201501/svg-d3-13-csv.html
         }
 
         body {
-            background-color: rgba(255, 128, 255, 0.1);
+            background-color: rgba(175, 209, 228, 0.19);
             font-family: 'CircleFont', 'Noto Serif JP', serif;
         }
 
@@ -157,110 +156,200 @@ https://www.oxxostudio.tw/articles/201501/svg-d3-13-csv.html
 </head>
 
 <body>
-    <h3>Data Visualization 成績 (Using d3 v7)</h3>
-    
+    <!-- 
+        <h3>Data Visualization 成績 (Using d3 v7)</h3> 
+    ------------------------------------>
     <div id="div1"></div>
+    
+    <div id="div2"><hr></div>
 
-    <div id="div2"></div>
 
-    <script src="./index.js"></script>
-</body>
-<script>   
-d3.select("#div1")
-    .append("table")
-    .append("tr")
-    .selectAll("td")
-    .data([10,9,8,7,6,5,4,3,2,1,0])
-    .enter()
-    .append("td")
-    .text(function (d, i) {
-        if (i <= 10 || isNaN(d)) {
-            return d;
-        }
-    })
-    .attr("class", function (d, i) { 
-        return GetAppleCSS(d);
-    })
-    .append("img")
-    .attr("src", function (d, i) { 
-        return GetAppleSVG(d);
-    })
-    .attr("x", "0")
-    .attr("y", "0")
-    .attr("width",  function(d, i) { return (i + 1) * 60; })
-    .attr("height", function(d, i) { return (i + 1) * 60; });
+
+<script type="text/javascript" charset="utf-8">
+let parsed_csv;
+let student_info = [];
+let series;
+let color_dict;
+let labelSpan = [10, 45, 100, 150, 210];
+let margin = ({top: 5, right: 10, bottom: 0, left: 250});
 
 d3.text("../data.csv").then(function (data) {
-    //console.log(data)
-    parsedCSV = d3.csvParseRows(data);
-    console.log(parsedCSV);
+    parsed_csv = d3.csvParse(data, (d, i, columns) => {
+        d3.autoType(d); 
+        d.total = d3.sum(columns.slice(5), c => d[c]);
+        student_info.push([
+            d.序號,
+            d.班級,
+            d.學號,
+            d.姓名,
+            d['GitHub 帳號']
+        ])
+        return d;
+    });
 
-    var container = d3.select("#div2")
-        .append("table")
-        .attr("id", "score-table")
-        .selectAll("tr")
-        .data(parsedCSV)
+    series = d3.stack().keys(parsed_csv.columns.slice(5))(parsed_csv).map(d => (d.forEach(v => v.key = d.key), d))
+
+    color_dict = d3.scaleOrdinal()
+        .domain(series.map(d => d.key))
+        .range(d3.schemeSpectral[series.length] || ["#ccc"]);
+    
+    CreateHintSVG();
+    CreateScoreSVG();
+});
+
+//***************************************************
+function DomainConvert(student) {
+    return student.序號;
+}
+
+function CreateHintSVG() {
+    const rect_height = 20
+    const rect_width = 64
+    const score_header = parsed_csv.columns.slice(5);
+    var width = 900;
+    var height = rect_height;
+    
+    var hint_svg = d3.create("svg")
+        .attr("viewBox", [0, -margin.top, width, height + margin.top])
+    hint_svg.append("g")
+        .attr("transform", "translate(0,15)")
+        .attr("opacity", 1)
+        .append("text")
+        .selectAll("tspan")
+        .data(parsed_csv.columns.slice(0, 5)).enter()
+        .append("tspan")
+        .attr("x", (d, i) => {
+            return labelSpan[i];
+        })
+        .attr("font-size", "8pt")
+        .attr("text-anchor", "middle")
+        .attr("fill", "black")
+        .text(d => d);
+
+    hint_svg.append("g")
+        .attr("id", "score-hint")
+        .selectAll("rect")
+        .data(score_header)
+        .join("rect")
+        .attr("fill", d => color_dict(d))
+        .attr("x", (d, i) => i * rect_width + margin.left)
+        .attr("y", 0)
+        .attr("width", rect_width)
+        .attr("height", rect_height)
+    
+    hint_svg.select("#score-hint")
+        .selectAll("text")
+        .data(score_header)
+        .join("text")
+        .attr("class", "rect-text")
+        .attr("x", (d, i) => (i) * rect_width + margin.left + 31)
+        .attr("y", 15)
+        .attr("text-anchor", "middle")
+        .attr("fill", "white")
+        .style("font-size", 10)
+        .text(d => d);
+        
+    d3.select("#div1")        
+        .style("font-size", "28pt")
+        .style("width", "90%")
+        .style("margin", "5px auto")
+        .style("text-align", "center")
+        .node()
+        .appendChild(hint_svg.node());
+}
+
+function CreateScoreSVG() {
+    var width = 900;
+    var height = parsed_csv.length * 25 + margin.top + margin.bottom;
+
+    var formatValue = x => isNaN(x) ? "N/A" : x.toLocaleString("en");
+    
+    var y = d3.scaleBand()
+        .domain(parsed_csv.map(d => {
+            return DomainConvert(d);
+        }))
+        .range([margin.top, height - margin.bottom])
+        .padding(0.08);
+
+    var x = d3.scaleLinear()
+        //.domain([0, d3.max(series, d => d3.max(d, d => d[1]))])
+        .domain([0, 100])
+        .range([margin.left, width - margin.right]);
+
+    var score_svg = d3.create("svg")
+        .attr("viewBox", [0, 0, width, height]);
+
+    score_svg.append("g")
+        .attr("id", "chart")
+        .selectAll("g")
+        .data(series)
+        .join("g")
+        .attr("fill", d => color_dict(d.key))
+        .selectAll("rect")
+        .data(d => d)
+        .join("rect")
+        .attr("x", d => x(d[0]))
+        .attr("y", (d, i) => y(DomainConvert(d.data)))
+        .attr("width", d => x(d[1]) - x(d[0]))
+        .attr("height", y.bandwidth())
+        .append("title")
+        .text(d => `${d.data.姓名} ${d.key} 分數 ${formatValue(d.data[d.key])}`)
+
+    score_svg.select("#chart")
+        .selectAll("g")
+        .data(series)
+        .join("g")
+        .selectAll("text")
+        .data(d => d)
+        .join("text")
+        .attr("class", "rect-text")
+        .attr("x", d => x(d[0]) + (x(d[1]) - x(d[0])) / 2)
+        .attr("y", (d, i) => y(DomainConvert(d.data)) + 16)
+        .attr("text-anchor", "middle")
+        .attr("font-size", 12)
+        .text(function(d) {
+            score = d[1] - d[0];
+            if (score != 0) {
+                return score;
+            }
+            else {
+                return "";
+            }
+        });
+    
+    d3.select("#div2")
+        .style("width", "90%") 
+        .style("margin", "5px auto") 
+        .node()
+        .appendChild(score_svg.node());
+    
+    d3.select("#div2")
+        .select("svg")
+        .append("g")
+        .attr("transform", "translate(0,0)")
+        .call(d3.axisRight(y).tickFormat(""))
+        .call(g => g.select(".domain").remove())
+        .call(g => g.selectAll("g").select("line").remove())
+        .selectAll("g")
+        .data(student_info)
+        .selectAll("text")
+        .data(d => [d])
+        .attr("font-size", "8pt")
+        .selectAll("tspan")
+        .data(d => d)
         .enter()
-        .append("tr")
-        .selectAll("td")
-        .data(function (d) { return d; }).enter()
-        .append("td")
-        .html(function (d, i) {
-            if ( i == 4 && d != 'GitHub 帳號' ) {
-                return '<a href="https://github.com/' + d + '/vis2023f/" target="_blank">' + d + '</a>';
-            }
-            else if ( i == 3 && d != "姓名") {
-                d3.select(this).attr("class", "clear-font");
+        .append("tspan")
+        .attr("x", (d, i) => labelSpan[i])
+        .attr("text-anchor", "middle")
+        .html((d, i) =>{
+            if (i == 4) {
+                return '<a xlink:href="https://github.com/' + d + '/vis2023f/" target="_blank" style="fill: blue; text-decoration: underline;">' + d + '</a>';
+            } else {
                 return d;
             }
-            else if ( i == 0 || i == 2 || isNaN(d)) {
-                return d;
-            }
-        })
-        .filter(function (d, i) {
-            return KeepScoreField(d, i); 
-        })
-        .attr("class", function (d, i) { 
-            return GetAppleCSS(d);
-        })
-        .append("img")
-        .attr("src", function (d, i) {
-            return GetAppleSVG(d);
-        })
-        .attr("width", 50)
-        .attr("height", 50);
-    }
-);
-
-function KeepScoreField(data, column_index) {
-    return column_index > 2 && !isNaN(data) && data != "";
-}
-
-function GetAppleCSS(state) {
-    if (state == 10) return "excellent-kid"; 
-    else if (state >= 7 ) return "good-kid"; 
-    else if (state >= 2 ) return "fair-kid"; 
-    else return "poor-kid";
-}
-
-function GetAppleSVG(state) {
-    const img_folder = "../data/svg/";
-    if (state == 10) return img_folder + "52.svg";
-    else if (state == 9) return img_folder + "51.svg";
-    else if (state == 8) return img_folder + "42.svg";
-    else if (state == 7) return img_folder + "41.svg";
-    else if (state == 6) return img_folder + "32.svg";
-    else if (state == 5) return img_folder + "31.svg";
-    else if (state == 4) return img_folder + "22.svg";
-    else if (state == 3) return img_folder + "21.svg";
-    else if (state == 2) return img_folder + "12.svg";
-    else if (state == 1) return img_folder + "11.svg";
-    else if (state == 0) return img_folder + "01.svg";
-    else return img_folder + "00.svg";
-}    
-    
-    
-</script> 
+        });    
+</srcipt>    
+</body>
     
 
 </html>
