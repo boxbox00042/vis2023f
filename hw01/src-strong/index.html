@@ -1,194 +1,266 @@
+<!--
+http://bl.ocks.org/ndarville/7075823
+https://www.oxxostudio.tw/articles/201501/svg-d3-13-csv.html
+-->
 
 <!DOCTYPE html>
-<!-- saved from url=(0065)https://tjhsieh.github.io/c/vis/vis2023f/hw01/src-easy/index.html -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <style type="text/css">
-        table, th, td {
-            border: 1px solid blue;
-            margin: 10px auto;
-            padding: 1px 3px;
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" href="../../hw00/favicon.svg"/>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        /* @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@900&display=swap'); */
+
+        @font-face {
+            font-family:'CircleFont'; /* src: url(https://circle472.github.io/ct2022s/hw04/CircleFont.ttf);  https://github.com/circle472/ct2022s/ */
+            src: url(../data/font/CircleFont_v2.woff2); /* https://cloudconvert.com/ttf-to-woff2 */
         }
-        
+
+        h3 {
+            background-color: rgba(255, 255, 0, 0.1);
+            color: white; 
+            text-shadow: 0 0 6px #FF0000, 0 0 6px #000000;
+            font-family: 'CircleFont', 'Noto Serif JP', serif;
+            font-size: 18pt;
+            border: solid 1px black;
+            width: 90%;
+            margin: 5px auto;
+            padding: 10px;
+            text-align: center;
+        }
+
+        div {
+            background-color: rgba(255, 255, 0, 0.1);
+            font-family: 'CircleFont', 'Noto Serif JP', serif;
+            font-size: 16pt;
+            border: solid 1px black;
+            width: 90%;
+            margin: 5px auto;
+            padding: 10px;
+            text-align: center;
+        }
+
+        body {
+            background-color: rgba(255, 128, 255, 0.1);
+            font-family: 'CircleFont', 'Noto Serif JP', serif;
+        }
+
+        table {
+            border-collapse: collapse;
+            border: 2px black solid;
+            font-family: 'CircleFont', 'Noto Serif JP', serif;
+            font-size: 16pt;
+            /* font: 16px sans-serif; */
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        td,
+        th {
+            border: 1px black solid;
+            padding: 5px;
+            background-color: rgba(128, 255, 255, 0.1);
+        }
+
+        .clear-font {
+            font-family: 'Noto Serif JP', serif;
+        }
+
+        td.left {
+            text-align: left;
+        }
+
+        td img {
+            transition: width, height;
+            transition-duration: 0.5s;
+            width: 50px;
+            height: 50px;
+            /* display: block; */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        img:hover {
+            box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+        }
+
+        /*
+        .excellent-kid {
+            background-color: skyblue;
+        }
+
+        .good-kid {
+            background-color: pink;
+        }
+
+        .fair-kid {
+            background-color: pink;
+        }
+
+        .poor-kid {
+            background-color: pink;
+        }
+        */
+
+        td:hover img {
+            transition: width, height;
+            transition-duration: 0.5s;
+            width: 100px;
+            height: 100px;
+        }
+
+        td.excellent-kid:hover img {
+            animation-name: happy;
+            animation-duration: 0.5s;
+            animation-iteration-count: infinite;
+        }
+
+        td.good-kid:hover img {
+            animation-name: happy;
+            animation-duration: 1.0s;
+            animation-iteration-count: infinite;
+        }
+
+        td.fair-kid:hover img {
+            animation-name: angry;
+            animation-duration: 1.5s;
+            animation-iteration-count: infinite;
+        }
+
+        td.poor-kid:hover img {
+            animation-name: angry;
+            animation-duration: 0.1s;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes happy {
+            0% {transform: translateY(0px);}
+            25% {transform: translateY(-5px);}
+            50% {transform: translateY(0px);}
+            75% {transform: translateY(-5px);}
+            100% {transform: translateY(0px);}
+        }
+
+        @keyframes angry {
+            0% {transform: translate(1px, 3px);}
+            25% {transform: translate(7px, 2px);}
+            50% {transform: translate(4px, 5px);}
+            75% {transform: translate(12px, 3px);}
+            100% {transform: translate(2px, 0px);}
+        }
     </style>
 </head>
- 
+
 <body>
-<!--     <center>
-        <h1 style="color:green">GeeksForGeeks</h1>
-        <h2>Table to CSV converter</h2>
-        <table border="1" cellspacing="0" cellpadding="10">
-            <tr>
-                <th>Name</th>
-                <th>age</th>
-                <th>place</th>
-            </tr>
-            <tr>
-                <td>Laxman</td>
-                <td>19</td>
-                <td>Hyderabad</td>
-            </tr>
-            <tr>
-                <td>Dhoni</td>
-                <td>22</td>
-                <td>Ranchi</td>
-            </tr>
-            <tr>
-                <td>Kohli</td>
-                <td>25</td>
-                <td>Delhi</td>
-            </tr>
-        </table> -->
-        <br><br>
-        <button type="button" onclick="tableToCSV()">
-            download CSV
-        </button>
+    <h3>Data Visualization 成績 (Using d3 v7)</h3>
     
- 
-    <script type="text/javascript">
+    <div id="div1"></div>
 
+    <div id="div2"></div>
 
-// https://stackoverflow.com/questions/966225/how-can-i-create-a-two-dimensional-array-in-javascript
+    <script src="./index.js"></script>
+</body>
+<script>   
+d3.select("#div1")
+    .append("table")
+    .append("tr")
+    .selectAll("td")
+    .data([10,9,8,7,6,5,4,3,2,1,0])
+    .enter()
+    .append("td")
+    .text(function (d, i) {
+        if (i <= 10 || isNaN(d)) {
+            return d;
+        }
+    })
+    .attr("class", function (d, i) { 
+        return GetAppleCSS(d);
+    })
+    .append("img")
+    .attr("src", function (d, i) { 
+        return GetAppleSVG(d);
+    })
+    .attr("x", "0")
+    .attr("y", "0")
+    .attr("width",  function(d, i) { return (i + 1) * 60; })
+    .attr("height", function(d, i) { return (i + 1) * 60; });
 
-function createArray(length) {
-    var arr = new Array(length || 0),
-        i = length;
+d3.text("../data.csv").then(function (data) {
+    //console.log(data)
+    parsedCSV = d3.csvParseRows(data);
+    console.log(parsedCSV);
 
-    if (arguments.length > 1) {
-        var args = Array.prototype.slice.call(arguments, 1);
-        while(i--) arr[length-1 - i] = createArray.apply(this, args);
-    }
-
-    return arr;
-}
-
-a1 = createArray();     // [] or new Array()
-//alert(a1);
-
-a2 = createArray(2);    // new Array(2)
-//alert(a2);
-
-a3 = createArray(10, 13); // [new Array(2),
-                   //  new Array(2),
-                   //  new Array(2)]
-//alert(a3);
-
-a3[0] = ['序號', '班級', '學號', '姓名', 'GitHub', '作業一', '作業二', '作業三', '作業四', '作業五', '作業六', '作業七', '作業八', '作業九', '作業十']
-
-for (var i = 1; i < a3.length; i++) {
-    a3[i][0] = i;
-    a3[i][1] = '電資四';
-    a3[i][2] = 112598000 + Math.floor(Math.random() * 999);
-    //a3[i][1] = '路人甲'; // 4E00-9FFF
-    //a3[i][1] = String.fromCharCode(0x6771);
-    a3[i][3] = String.fromCharCode(Math.floor(Math.random() * 0x51ff + 0x4e00)) +
-               String.fromCharCode(Math.floor(Math.random() * 0x51ff + 0x4e00)) +
-               String.fromCharCode(Math.floor(Math.random() * 0x51ff + 0x4e00));
-    
-    
-    //a3[i][2] = 'github';
-    // https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
-    // Math.random() 會回傳一個偽隨機小數 (pseudo-random) 介於 0 到 1 之間(包含 0，不包含 1) 
-    // str.substring(indexStart[, indexEnd])
-    // number.toString(radix) 10個數字 + 26個英文字母 = 36
-    a3[i][4] = (Math.random() + 1).toString(36).substring(2);
-
-    
-    for (var j = 5; j < a3[0].length; j++) {
-        a3[i][j] = Math.floor(Math.random() * 10);
-    }
-}
-//alert(a3);
-
-
-
-// https://medium.com/wdstack/quick-blurb-generating-a-table-from-an-array-in-javascript-41386fd449a9
-//setup our table array
-var tableArr = [
-  ["row 1, cell 1", "row 1, cell 2"],
-  ["row 2, cell 1", "row 2, cell 2"]
-]
-//create a Table Object
-let table = document.createElement('table');
-//iterate over every array(row) within tableArr
-for (let row of a3) {
-//Insert a new row element into the table element
-  table.insertRow();
-//Iterate over every index(cell) in each array(row)
-  for (let cell of row) {
-//While iterating over the index(cell)
-//insert a cell into the table element
-    let newCell = table.rows[table.rows.length - 1].insertCell();
-//add text to the created cell element
-    newCell.textContent = cell;
-  }
-}
-//append the compiled table to the DOM
-document.body.appendChild(table);
-
-
-
-
-
-        function tableToCSV() {
- 
-            // Variable to store the final csv data
-            var csv_data = [];
- 
-            // Get each row data
-            var rows = document.getElementsByTagName('tr');
-            for (var i = 0; i < rows.length; i++) {
- 
-                // Get each column data
-                var cols = rows[i].querySelectorAll('td,th');
- 
-                // Stores each csv row data
-                var csvrow = [];
-                for (var j = 0; j < cols.length; j++) {
- 
-                    // Get the text data of each cell
-                    // of a row and push it to csvrow
-                    csvrow.push(cols[j].innerHTML);
-                }
- 
-                // Combine each column value with comma
-                csv_data.push(csvrow.join(","));
+    var container = d3.select("#div2")
+        .append("table")
+        .attr("id", "score-table")
+        .selectAll("tr")
+        .data(parsedCSV)
+        .enter()
+        .append("tr")
+        .selectAll("td")
+        .data(function (d) { return d; }).enter()
+        .append("td")
+        .html(function (d, i) {
+            if ( i == 4 && d != 'GitHub 帳號' ) {
+                return '<a href="https://github.com/' + d + '/vis2023f/" target="_blank">' + d + '</a>';
             }
- 
-            // Combine each row data with new line character
-            csv_data = csv_data.join('\n');
- 
-            // Call this function to download csv file 
-            downloadCSVFile(csv_data);
- 
-        }
- 
-        function downloadCSVFile(csv_data) {
- 
-            // Create CSV file object and feed
-            // our csv_data into it
-            CSVFile = new Blob([csv_data], {
-                type: "text/csv"
-            });
- 
-            // Create to temporary link to initiate
-            // download process
-            var temp_link = document.createElement('a');
- 
-            // Download csv file
-            temp_link.download = "data.csv";
-            var url = window.URL.createObjectURL(CSVFile);
-            temp_link.href = url;
- 
-            // This link should not be displayed
-            temp_link.style.display = "none";
-            document.body.appendChild(temp_link);
- 
-            // Automatically click the link to
-            // trigger download
-            temp_link.click();
-            document.body.removeChild(temp_link);
-        }
-    </script><table><tbody><tr><td>序號</td><td>班級</td><td>學號</td><td>姓名</td><td>GitHub</td><td>作業一</td><td>作業二</td><td>作業三</td><td>作業四</td><td>作業五</td><td>作業六</td><td>作業七</td><td>作業八</td><td>作業九</td><td>作業十</td></tr><tr><td>1</td><td>電資四</td><td>112598820</td><td>瓂蓶擘</td><td>0ppm5z4wgw</td><td>5</td><td>2</td><td>8</td><td>9</td><td>8</td><td>5</td><td>7</td><td>6</td><td>7</td><td>8</td></tr><tr><td>2</td><td>電資四</td><td>112598555</td><td>珡藒鋒</td><td>39b75wuidg</td><td>7</td><td>8</td><td>0</td><td>2</td><td>6</td><td>9</td><td>9</td><td>1</td><td>5</td><td>7</td></tr><tr><td>3</td><td>電資四</td><td>112598731</td><td>簕簣葥</td><td>k9nywm89yf</td><td>0</td><td>2</td><td>8</td><td>7</td><td>6</td><td>8</td><td>0</td><td>4</td><td>4</td><td>6</td></tr><tr><td>4</td><td>電資四</td><td>112598945</td><td>蛯絏櫣</td><td>sbmx8dls87</td><td>6</td><td>8</td><td>1</td><td>4</td><td>3</td><td>6</td><td>3</td><td>7</td><td>4</td><td>5</td></tr><tr><td>5</td><td>電資四</td><td>112598061</td><td>禪烄晃</td><td>6ftcus4u97</td><td>2</td><td>3</td><td>5</td><td>1</td><td>0</td><td>6</td><td>3</td><td>7</td><td>2</td><td>9</td></tr><tr><td>6</td><td>電資四</td><td>112598569</td><td>檕鮾偁</td><td>j3ms0s2q7h</td><td>6</td><td>1</td><td>5</td><td>5</td><td>3</td><td>9</td><td>1</td><td>5</td><td>6</td><td>3</td></tr><tr><td>7</td><td>電資四</td><td>112598388</td><td>骆夦螎</td><td>525r09qwr6</td><td>2</td><td>7</td><td>3</td><td>5</td><td>7</td><td>4</td><td>5</td><td>5</td><td>0</td><td>5</td></tr><tr><td>8</td><td>電資四</td><td>112598764</td><td>豑寷寔</td><td>a2570fvpxn</td><td>4</td><td>7</td><td>2</td><td>5</td><td>0</td><td>3</td><td>7</td><td>0</td><td>8</td><td>9</td></tr><tr><td>9</td><td>電資四</td><td>112598050</td><td>檅僅嫑</td><td>wnk63u2agv</td><td>6</td><td>9</td><td>0</td><td>2</td><td>5</td><td>9</td><td>9</td><td>4</td><td>7</td><td>1</td></tr></tbody></table>
+            else if ( i == 3 && d != "姓名") {
+                d3.select(this).attr("class", "clear-font");
+                return d;
+            }
+            else if ( i == 0 || i == 2 || isNaN(d)) {
+                return d;
+            }
+        })
+        .filter(function (d, i) {
+            return KeepScoreField(d, i); 
+        })
+        .attr("class", function (d, i) { 
+            return GetAppleCSS(d);
+        })
+        .append("img")
+        .attr("src", function (d, i) {
+            return GetAppleSVG(d);
+        })
+        .attr("width", 50)
+        .attr("height", 50);
+    }
+);
 
- 
-</body></html>
+function KeepScoreField(data, column_index) {
+    return column_index > 2 && !isNaN(data) && data != "";
+}
+
+function GetAppleCSS(state) {
+    if (state == 10) return "excellent-kid"; 
+    else if (state >= 7 ) return "good-kid"; 
+    else if (state >= 2 ) return "fair-kid"; 
+    else return "poor-kid";
+}
+
+function GetAppleSVG(state) {
+    const img_folder = "../data/svg/";
+    if (state == 10) return img_folder + "52.svg";
+    else if (state == 9) return img_folder + "51.svg";
+    else if (state == 8) return img_folder + "42.svg";
+    else if (state == 7) return img_folder + "41.svg";
+    else if (state == 6) return img_folder + "32.svg";
+    else if (state == 5) return img_folder + "31.svg";
+    else if (state == 4) return img_folder + "22.svg";
+    else if (state == 3) return img_folder + "21.svg";
+    else if (state == 2) return img_folder + "12.svg";
+    else if (state == 1) return img_folder + "11.svg";
+    else if (state == 0) return img_folder + "01.svg";
+    else return img_folder + "00.svg";
+}    
+    
+    
+</script> 
+    
+
+</html>
