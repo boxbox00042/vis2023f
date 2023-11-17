@@ -1,11 +1,11 @@
 {
-  "name": "c9da37a494e5d1f3",
-  "main": "c9da37a494e5d1f3@131.js",
-  "version": "131.0.0",
-  "homepage": "https://observablehq.com/d/c9da37a494e5d1f3",
+  "name": "b2c6e695b50870d0",
+  "main": "b2c6e695b50870d0@16.js",
+  "version": "16.0.0",
+  "homepage": "https://observablehq.com/d/b2c6e695b50870d0",
   "author": {
-    "name": "YellowDuck's Workspace",
-    "url": "https://observablehq.com/@yellowduck-ws"
+    "name": "北科大陳旻昌's Workspace",
+    "url": "https://observablehq.com/@bei-ke-da-chen-min-chang-ws"
   },
   "type": "module",
   "peerDependencies": {
