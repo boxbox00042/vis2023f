@@ -1,1 +1,1 @@
-export {default} from "../data.js";
+export {default} from "./data.js";
