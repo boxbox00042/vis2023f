@@ -45,49 +45,59 @@ function _data(artist,innerCircleQuestion,outerCircleQuestion,buildHierarchy)
 }
 
 
-function _buildHierarchy(){return(
-function buildHierarchy(csv) {
-  // Helper function that transforms the given CSV into a hierarchical format.
-  const root = { name: "root", children: [] };
-  for (let i = 0; i < csv.length; i++) {
-    const sequence = csv[i][0];
-    const size = +csv[i][1];
-    if (isNaN(size)) {
-      // e.g. if this is a header row
-      continue;
-    }
-    const parts = sequence.split("-");
-    let currentNode = root;
-    for (let j = 0; j < parts.length; j++) {
-      const children = currentNode["children"];
-      const nodeName = parts[j];
-      let childNode = null;
-      if (j + 1 < parts.length) {
-        // Not yet at the end of the sequence; move down the tree.
-        let foundChild = false;
-        for (let k = 0; k < children.length; k++) {
-          if (children[k]["name"] == nodeName) {
-            childNode = children[k];
-            foundChild = true;
-            break;
-          }
+function _breadcrumb(d3,breadcrumbWidth,breadcrumbHeight,sunburst,breadcrumbPoints,color)
+{
+  const svg = d3
+    .create("svg")
+    .attr("viewBox", `0 0 ${breadcrumbWidth * 10} ${breadcrumbHeight}`)
+    .style("font", "12px sans-serif")
+    .style("margin", "5px");
+
+  const g = svg
+    .selectAll("g")
+    .data(sunburst.sequence)
+    .join("g")
+    .attr("transform", (d, i) => `translate(${i * breadcrumbWidth}, 0)`);
+
+    g.append("polygon")
+      .attr("points", breadcrumbPoints)
+      .attr("fill", d => color(d.data.name))
+      .attr("stroke", "white");
+
+    g.append("text")
+      .attr("x", (breadcrumbWidth + 10) / 2)
+      .attr("y", 15)
+      .attr("dy", "0.35em")
+      .attr("text-anchor", "middle")
+      .attr("fill", "white")
+      .text(d => {
+        if(d.data.name === "減少包裝材及文宣印製") {
+          return "減少包裝";
         }
-        // If we don't already have a child node for this branch, create it.
-        if (!foundChild) {
-          childNode = { name: nodeName, children: [] };
-          children.push(childNode);
+        else if(d.data.name === "使用無毒媒材、再生材料、廢物利用素材等") {
+          return "使用再生材料";
         }
-        currentNode = childNode;
-      } else {
-        // Reached the end of the sequence; create a leaf node.
-        childNode = { name: nodeName, value: size };
-        children.push(childNode);
-      }
-    }
-  }
-  return root;
+        else if(d.data.name === "工作場所、活動展場的節約能源") {
+          return "節約能源";
+        }
+        else if(d.data.name.length > 6)
+        {
+          return "其他答案";
+        }
+        return d.data.name;
+      });
+
+  svg
+    .append("text")
+    .text(sunburst.percentage > 0 ? sunburst.percentage + "%" : "")
+    .attr("x", (sunburst.sequence.length + 0.5) * breadcrumbWidth)
+    .attr("y", breadcrumbHeight / 2)
+    .attr("dy", "0.35em")
+    .attr("text-anchor", "middle");
+
+  return svg.node();
 }
-)}
+
 
 function _sunburst(partition,data,d3,radius,innerCircleQuestion,outerCircleQuestion,width,color,arc,mousearc)
 {
@@ -354,6 +364,50 @@ md`# 參數、函數
 `
 )}
 
+function _buildHierarchy(){return(
+function buildHierarchy(csv) {
+  // Helper function that transforms the given CSV into a hierarchical format.
+  const root = { name: "root", children: [] };
+  for (let i = 0; i < csv.length; i++) {
+    const sequence = csv[i][0];
+    const size = +csv[i][1];
+    if (isNaN(size)) {
+      // e.g. if this is a header row
+      continue;
+    }
+    const parts = sequence.split("-");
+    let currentNode = root;
+    for (let j = 0; j < parts.length; j++) {
+      const children = currentNode["children"];
+      const nodeName = parts[j];
+      let childNode = null;
+      if (j + 1 < parts.length) {
+        // Not yet at the end of the sequence; move down the tree.
+        let foundChild = false;
+        for (let k = 0; k < children.length; k++) {
+          if (children[k]["name"] == nodeName) {
+            childNode = children[k];
+            foundChild = true;
+            break;
+          }
+        }
+        // If we don't already have a child node for this branch, create it.
+        if (!foundChild) {
+          childNode = { name: nodeName, children: [] };
+          children.push(childNode);
+        }
+        currentNode = childNode;
+      } else {
+        // Reached the end of the sequence; create a leaf node.
+        childNode = { name: nodeName, value: size };
+        children.push(childNode);
+      }
+    }
+  }
+  return root;
+}
+)}
+
 function _width(){return(
 640
 )}
@@ -426,10 +480,10 @@ function breadcrumbPoints(d, i) {
 }
 )}
 
-function _19(htl){return(
+function _20(htl){return(
 htl.html`<style>
 .tooltip {
-  padding: 8px 12px;
+  padding: 20px 20px;
   color: white;
   border-radius: 6px;
   border: 2px solid rgba(255,255,255,0.5);
@@ -455,11 +509,12 @@ export default function define(runtime, observer) {
   main.variable(observer("innerCircleQuestion")).define("innerCircleQuestion", ["artist"], _innerCircleQuestion);
   main.variable(observer("outerCircleQuestion")).define("outerCircleQuestion", ["artist"], _outerCircleQuestion);
   main.variable(observer("data")).define("data", ["artist","innerCircleQuestion","outerCircleQuestion","buildHierarchy"], _data);
-  main.variable(observer("buildHierarchy")).define("buildHierarchy", _buildHierarchy);
+  main.variable(observer("breadcrumb")).define("breadcrumb", ["d3","breadcrumbWidth","breadcrumbHeight","sunburst","breadcrumbPoints","color"], _breadcrumb);
   main.variable(observer("viewof sunburst")).define("viewof sunburst", ["partition","data","d3","radius","innerCircleQuestion","outerCircleQuestion","width","color","arc","mousearc"], _sunburst);
   main.variable(observer("sunburst")).define("sunburst", ["Generators", "viewof sunburst"], (G, _) => G.input(_));
   main.variable(observer()).define(["htl"], _8);
   main.variable(observer()).define(["md"], _9);
+  main.variable(observer("buildHierarchy")).define("buildHierarchy", _buildHierarchy);
   main.variable(observer("width")).define("width", _width);
   main.variable(observer("radius")).define("radius", ["width"], _radius);
   main.variable(observer("partition")).define("partition", ["d3","radius"], _partition);
@@ -469,6 +524,6 @@ export default function define(runtime, observer) {
   main.variable(observer("breadcrumbWidth")).define("breadcrumbWidth", _breadcrumbWidth);
   main.variable(observer("breadcrumbHeight")).define("breadcrumbHeight", _breadcrumbHeight);
   main.variable(observer("breadcrumbPoints")).define("breadcrumbPoints", ["breadcrumbWidth","breadcrumbHeight"], _breadcrumbPoints);
-  main.variable(observer()).define(["htl"], _19);
+  main.variable(observer()).define(["htl"], _20);
   return main;
 }
