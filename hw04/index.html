@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- D3, jquery -->
-<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="https://d3js.org/d3.v7.min.js" charset="utf-8"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" charset="utf-8"></script>
 
 <!-- Bootstrap CSS -->
@@ -17,8 +17,13 @@
 <!-- https://alexlenail.me/NN-SVG/about.html -->
 <link rel="icon" href="../hw00/favicon.svg"/>
 <style type="text/css">
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200&display=swap');
-
+  /* @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200&display=swap');*/
+  /*
+  @font-face {
+    font-family:'CircleFont'; 
+    src: url(../hw01/data/font/CircleFont_v2.woff2);
+  }
+  */
   table {
   border-collapse: collapse;
   border: 2px solid white; /* rgba(217,140,144,1) */
@@ -171,21 +176,50 @@
   <!-- ------------------------------------------------>
   <div class="row hw12">
     <div class="col-md-12 twenty">
-      <h1>作業 04</h1>
+      <h1>作業 02</h1>
     </div>
   </div>
 
-  <!-- ------------------------------------------------>
-  <div class="row hw12">
-    <div class="col-md-12 twenty">
-      該次作業程式碼，請放在 https://github.com/<span style="color:red;">你的帳號</span>/vis2023f/hw<span style="color:red;">04</span>/src/ 檔案夾。
-    </div>
+<!-- ------------------------------------------------>
+<div class="row hw12">
+  <div class="col-md-12 twenty">
+    Simple baseline及Medium Baseline程式碼，請放在 https://github.com/boxbox00042/vis2023f/tree/main/hw04/src-sunburst
+    <hr>
+    <hr>
+    Strong baseline 程式碼，請放在 https://github.com/boxbox00042/vis2023f/tree/main/hw04/src/src-strong
+    <br>
   </div>
+</div>
 
   <!-- ------------------------------------------------>
+ 
+<!-- ------------------------------------------------>
+<div class="row hw12">
+  <div class="col-md-12 twenty">
+    <h4>前往Demo網頁</h4>
+  </div>
+</div>
+
+<!-- ------------------------------------------------>
+<div class="row hw12">
+  <div class="col-md-12 twenty">
+    <a href="https://boxbox00042.github.io/vis2023f/hw04/src/src-sunburst/">https://boxbox00042.github.io/vis2023f/hw04/src/src-sunburst/</a>
+    <hr>
+    <a href="https://boxbox00042.github.io/vis2023f/hw04/src/src-strong/">https://boxbox00042.github.io/vis2023f/hw04/src/src-strong/</a>   
+    </div>
+</div>
+
+<!-- ------------------------------------------------>
+
+
+
+<!-- ------------------------------------------------>
+
   <div class="row hw12">
     <div class="col-md-12 twenty">
-      心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。心得報告 105 字。
+      心得報告
+      <hr>
+     透過深入的數據分析，我逐漸發現如何以清晰簡潔的方式呈現這些資訊。 在眾多圖表中，旭日圖不僅能夠生動地展示局部和整體的佔比，同時也能清楚呈現層次結構的關係，這使得它成為我目前認為最適合的圖表之一。 除了圖表本身，巧妙運用文字說明、頁面路徑的層次性呈現，以及精心設計的圖標輔助，這些元素結合起來有助於更深入地理解信息所要傳達的核心意義。 這是我在分析過程中所得的心得體會。
     </div>
   </div>
 
@@ -199,39 +233,77 @@
           <th>配分</th>
           <th>分項描述</th>
         </tr>
+
         <tr>
-          <td rowspan="7" id="myTotal"></td>
-          <td><input type="checkbox" class="flipswitch" id="myCheckbox1"></td>
+          <td rowspan="16" id="myTotal"></td>
+          <td><input type="checkbox" class="flipswitch" id="myCheckbox1" checked="checked"></td>
           <td id='m1'>2</td>
-          <td>Simple baseline - 描述、描述、描述</td>
+          <td>Simple baseline 1 - 完成旭日圖</td>
         </tr>
-        <tr>
-          <td><input type="checkbox" class="flipswitch" id="myCheckbox2" checked></td>
-          <td id='m2'>6</td>
-          <td>Medium baseline - 描述、描述、描述 </td>
+
+         <tr>
+          <td><input type="checkbox" class="flipswitch" id="myCheckbox2" checked="checked"></td>
+          <td id='m2'>1</td>
+          <td>Simple baseline 2 - 完成頁面路徑</td>
         </tr>
+        
         <tr>
-          <td><input type="checkbox" class="flipswitch" id="myCheckbox3"></td>
+          <td><input type="checkbox" class="flipswitch" id="myCheckbox3" checked="checked"></td>
           <td id='m3'>2</td>
-          <td>Strong baseline - 描述、描述、描述 </td>
+          <td>Medium baseline 1 - 加入Tooltip</td>
         </tr>
+
+        <tr>
+          <td><input type="checkbox" class="flipswitch" id="myCheckbox4" checked="checked"></td>
+          <td id='m4' >2</td>
+          <td>Medium baseline 2 - 完成結論</td>
+        </tr>
+        
+        <tr>
+          <td><input type="checkbox" class="flipswitch" id="myCheckbox5" checked="checked"></td>
+          <td id='m5' >3</td>
+          <td>Strong baseline - 將兩個問題之間的意義以圖表呈現(可互動)</td>
+        </tr>
+
+        
       </table>
+
+    </div>
+  </div>
+
+
+
+
+ 
+  <div class="row hw12">
+    <div class="col-md-12 twenty">
+      <h4>Simple baseline,Medium baseline </h4>
     </div>
   </div>
 
   <!-- ------------------------------------------------>
   <div class="row hw12">
     <div class="col-md-12 twenty">
-      <video id="video1" style="width:100%;max-width:100%;" controls="">
-        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-      </video>
+      <iframe width="100%" height="500" frameborder="0" style="background-color: #FFFFFF" src="./src-sunburst/index.html"></iframe>
+    </div>
+  </div>
+    
+  <!-- ------------------------------------------------>
+  <div class="row hw12">
+    <div class="col-md-12 twenty">
+      <h4>Strong baseline</h4>
     </div>
   </div>
 
   <!-- ------------------------------------------------>
-
-  <!-- ------------------------------------------------>
-
+  <div class="row hw12">
+    <div class="col-md-12 twenty">
+      <iframe width="100%" height="500" frameborder="0" style="background-color: #FFFFFF" src="./src-strong/index.html"></iframe>
+    </div>
+  </div>
+    
+ 
+    
 
 <script>
   $(function() {
@@ -267,8 +339,21 @@
       score += parseInt(d3.select('#m3').html());   
     }
 
+    if (d3.select("#myCheckbox4").property("checked")){
+      score += parseInt(d3.select('#m4').html());
+    }
+
+    if (d3.select("#myCheckbox5").property("checked")){
+      score += parseInt(d3.select('#m5').html());   
+    }
+
+    if (d3.select("#myCheckbox6").property("checked")){
+      score += parseInt(d3.select('#m6').html());   
+    }
+
     d3.select("#myTotal").html(score);    
   }
+
 </script>
 
 </body>
