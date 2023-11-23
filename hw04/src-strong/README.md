@@ -1,6 +1,6 @@
-# HW04 Sunburst
+# HW04 Strong baseline
 
-https://observablehq.com/d/9c71e78ff7974264@107
+https://observablehq.com/d/0892f1837925d7a6@92
 
 View this notebook in your browser by running a web server in this folder. For
 example:
@@ -14,14 +14,14 @@ import this module directly into your application. To npm install:
 
 ~~~sh
 npm install @observablehq/runtime@5
-npm install https://api.observablehq.com/d/9c71e78ff7974264@107.tgz?v=3
+npm install https://api.observablehq.com/d/0892f1837925d7a6@92.tgz?v=3
 ~~~
 
 Then, import your notebook and the runtime as:
 
 ~~~js
 import {Runtime, Inspector} from "@observablehq/runtime";
-import define from "9c71e78ff7974264";
+import define from "0892f1837925d7a6";
 ~~~
 
 To log the value of the cell named “foo”:
