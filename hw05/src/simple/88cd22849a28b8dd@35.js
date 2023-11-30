@@ -1,8 +1,9 @@
 function _1(md){return(
-md`# HW5 Simple baseline	`
+md`# HW5 Simple baseline	
+# 實作Force-directed tree呈現分組情況`
 )}
 
-function _simple1(d3,simple,drag,invalidation)
+function _simple1(d3,simple,invalidation)
 {
    // 指定圖表的尺寸。
   const width = 1000;
@@ -56,22 +57,8 @@ function _simple1(d3,simple,drag,invalidation)
       .attr("fill", "white") // 內部填充顏色
       .attr("stroke", d => colorScale(d.depth)) // 外框顏色根據節點深度
       .attr("stroke-width", 3)
-      .call(drag(simulation));
 
 
-   //設定圖片大小
-  const size_offset = 1.2;//控制內圖片大小
-  
-  // 計算偏移量
-  const offset = size_offset / 2;//控制內圖片放置位置的偏移量
-  
-  // 添加內圖
-  node.append("image")
-    .attr("x", -(circleRadius * offset)) // 將圖片的左上角放在圓圈框的左上角
-    .attr("y", -(circleRadius * offset)) // 將圖片的左上角放在圓圈框的左上角
-    .attr("width", circleRadius * size_offset) // 設置圖片寬度為圓圈直徑的兩倍
-    .attr("height", circleRadius * size_offset) // 設置圖片高度為圓圈直徑的兩倍
-    .attr("href",d => d.data.image_url);
   
  // 設定節點初始位置在畫布的中間
   nodes.forEach(node => {
@@ -100,43 +87,15 @@ function _simple(FileAttachment){return(
 FileAttachment("output.json").json()
 )}
 
-function _drag(d3){return(
-simulation => {
-  
-  function dragstarted(event, d) {
-    if (!event.active) simulation.alphaTarget(0.3).restart();
-    d.fx = d.x;
-    d.fy = d.y;
-  }
-  
-  function dragged(event, d) {
-    d.fx = event.x;
-    d.fy = event.y;
-  }
-  
-  function dragended(event, d) {
-    if (!event.active) simulation.alphaTarget(0);
-    d.fx = null;
-    d.fy = null;
-  }
-  
-  return d3.drag()
-      .on("start", dragstarted)
-      .on("drag", dragged)
-      .on("end", dragended); 
-}
-)}
-
 export default function define(runtime, observer) {
   const main = runtime.module();
   function toString() { return this.url; }
   const fileAttachments = new Map([
-    ["output.json", {url: new URL("./output.json", import.meta.url), mimeType: "application/json", toString}]
+    ["output.json", {url: new URL("../output.json", import.meta.url), mimeType: "application/json", toString}]
   ]);
   main.builtin("FileAttachment", runtime.fileAttachments(name => fileAttachments.get(name)));
   main.variable(observer()).define(["md"], _1);
-  main.variable(observer("simple1")).define("simple1", ["d3","simple","drag","invalidation"], _simple1);
+  main.variable(observer("simple1")).define("simple1", ["d3","simple","invalidation"], _simple1);
   main.variable(observer("simple")).define("simple", ["FileAttachment"], _simple);
-  main.variable(observer("drag")).define("drag", ["d3"], _drag);
   return main;
 }
