@@ -1,16 +1,16 @@
 function _1(md){return(
-md`# HW5 Simple baseline	
-# 使節點可以被拖拉移動`
+md`# HW5 Simple baseline
+# 將個人圖片放入節點圓圈中`
 )}
 
-function _simple(d3,simple_data,drag,invalidation)
+function _simple3(d3,output,drag,invalidation)
 {
   // 指定圖表的尺寸。
-  const width = 1000;
+  const width = 1500;
   const height = 1000;
-
+  
   // 計算圖形並啟動力模擬。
-  const root = d3.hierarchy(simple_data);
+  const root = d3.hierarchy(output);
   const links = root.links();
   const nodes = root.descendants();
   
@@ -48,8 +48,8 @@ function _simple(d3,simple_data,drag,invalidation)
       .selectAll("g")
       .data(nodes)
       .join("g")
-      .attr("transform", d => `translate(${d.x},${d.y})`) // 定位節點
-      .call(drag(simulation));//拖拉功能開啟
+      .attr("transform", d => `translate(${d.x},${d.depth * 100})`) // 定位節點
+      .call(drag(simulation));
 
   // 添加節點外框
   const circleRadius = 20; // 調整圓圈半徑大小
@@ -58,14 +58,25 @@ function _simple(d3,simple_data,drag,invalidation)
       .attr("fill", "white") // 內部填充顏色
       .attr("stroke", d => colorScale(d.depth)) // 外框顏色根據節點深度
       .attr("stroke-width", 3);
+
+  //設定圖片大小
+  const size_offset = 1.2;//控制內圖片大小
+  
+  // 計算偏移量
+  const offset = size_offset / 2;//控制內圖片放置位置的偏移量
+  
+  // 添加內圖
+  node.append("image")
+    .attr("x", -(circleRadius * offset)) // 將圖片的左上角放在圓圈框的左上角
+    .attr("y", -(circleRadius * offset)) // 將圖片的左上角放在圓圈框的左上角
+    .attr("width", circleRadius * size_offset) // 設置圖片寬度為圓圈直徑的兩倍
+    .attr("height", circleRadius * size_offset) // 設置圖片高度為圓圈直徑的兩倍
+    .attr("href",d => d.data.image_url);
   
  // 設定節點初始位置在畫布的中間
   nodes.forEach(node => {
     node.y = 0; // 將y座標設定在畫布的中間
   });
-
-  // 更新力模擬的y方向力，讓節點向下運動
-  simulation.force("y", d3.forceY().strength(0.1).y(d => d.depth * 100)); // 調整力的方向和大小
   
   simulation.on("tick", () => {
     node.attr("transform", d => `translate(${d.x},${d.y})`); // 更新節點位置
@@ -82,7 +93,7 @@ function _simple(d3,simple_data,drag,invalidation)
 }
 
 
-function _simple_data(FileAttachment){return(
+function _output(FileAttachment){return(
 FileAttachment("output.json").json()
 )}
 
@@ -121,8 +132,8 @@ export default function define(runtime, observer) {
   ]);
   main.builtin("FileAttachment", runtime.fileAttachments(name => fileAttachments.get(name)));
   main.variable(observer()).define(["md"], _1);
-  main.variable(observer("simple")).define("simple", ["d3","simple_data","drag","invalidation"], _simple);
-  main.variable(observer("simple_data")).define("simple_data", ["FileAttachment"], _simple_data);
+  main.variable(observer("simple3")).define("simple3", ["d3","output","drag","invalidation"], _simple3);
+  main.variable(observer("output")).define("output", ["FileAttachment"], _output);
   main.variable(observer("drag")).define("drag", ["d3"], _drag);
   return main;
 }
