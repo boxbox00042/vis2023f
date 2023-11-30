@@ -1,0 +1,14 @@
+{
+  "name": "30f6b7199cb7b051",
+  "main": "30f6b7199cb7b051@13.js",
+  "version": "13.0.0",
+  "homepage": "https://observablehq.com/d/30f6b7199cb7b051",
+  "author": {
+    "name": "北科大陳旻昌's Workspace",
+    "url": "https://observablehq.com/@bei-ke-da-chen-min-chang-ws"
+  },
+  "type": "module",
+  "peerDependencies": {
+    "@observablehq/runtime": "4 - 5"
+  }
+}
