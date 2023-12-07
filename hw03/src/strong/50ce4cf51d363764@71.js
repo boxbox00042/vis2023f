@@ -1,8 +1,7 @@
 import define1 from "./e93997d5089d7165@2303.js";
 
 function _1(md){return(
-md`# HW03 Strong baseline
-`
+md`# HW03 Strong baseline`
 )}
 
 function _data(FileAttachment){return(
@@ -10,7 +9,7 @@ FileAttachment("UserData.json").json()
 )}
 
 function _bgColor(Inputs){return(
-Inputs.color({ label: "background color", value: "#dde6ee" })
+Inputs.color({ label: "background color", value: "#dde4ee" })
 )}
 
 function _strokeColor(Inputs){return(
@@ -28,7 +27,7 @@ function _taiwan(taiwanMap){return(
 taiwanMap(800, 600, -0.0, -0.6, 8000)
 )}
 
-function _taiwanMap(d3,topojson,tw,DOM,bgColor,strokeColor,strokeOpacity,defaultColor,minidata){return(
+function _taiwanMap(d3,topojson,tw,DOM,bgColor,strokeColor,strokeOpacity,minidata){return(
 (width, height, offsetX, offsetY, scale) => {
   offsetX = offsetX + 0.75;
 
@@ -65,56 +64,33 @@ function _taiwanMap(d3,topojson,tw,DOM,bgColor,strokeColor,strokeOpacity,default
     .attr("opacity", strokeOpacity)
     .attr("d", path);
 
-  const tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
-  
-  
-    // 設定人數閥值，可以根據實際情況調整
-  const thresholds = [1, 5, 30, 40];
-
-  // 設定對應的填充顏色
-  const colorScale = d3.scaleThreshold()
-    .domain(thresholds)
-    // .range(["#FEDFE1", "#F8C3CD", "#E87A90", "#DB4D6D","#B5495B", defaultColor]);
-      .range(["#164863", "#427D9D", "#9BBEC8", "#A0E9FF","#89CFF3", defaultColor]);
-
-    // .range(["#fee5d9", "#fcae91", "#fb6a4a", "#de2d26", defaultColor]); 
-
+  const maxValue = 42;
+  const thresholds = d3.range(0, maxValue + 1);
+  const colorRange = thresholds.map(value => d3.interpolatePuBuGn(value / maxValue));
+  const thresholdScale = d3.scaleThreshold().domain(thresholds).range(colorRange);
   
   details
     .enter()
     .append("path")
     .attr("fill", (d) => {
-      const countyData = minidata.find(
+      const foundData = minidata.find(
         (t) =>
-          t.value === d.properties.COUNTYNAME &&
-          t["value"].replace("　", "") === d.properties.COUNTYNAME
+          t.value === d.properties.COUNTYNAME ||
+          t.value.replace("臺", "台") === d.properties.COUNTYNAME
       );
-
-      if (countyData) {
-        return colorScale(countyData.count);
-      } else {
-        return defaultColor;
-      }
+      return foundData ? thresholdScale(foundData.count) : thresholdScale(0);
     })
+    .attr("stroke", "gray")
     .attr("d", path)
     .append("title")
-    // .text((d) => d.properties.COUNTYNAME);
     .text((d) => {
-    const countyData = minidata.find(
-      (t) =>
-        t.value === d.properties.COUNTYNAME &&
-        t["value"].replace("　", "") === d.properties.COUNTYNAME
-    );
-
-    if (countyData) {
-      // 格式化提示訊息，這裡假設人數資料存在 count 屬性中
-      return `${d.properties.COUNTYNAME}: ${countyData.count} 人`;
-    } else {
-      return `${d.properties.COUNTYNAME}: 0 人`;
-    }
-  });
+      const foundData = minidata.find(
+        (t) =>
+          t.value === d.properties.COUNTYNAME ||
+          t.value.replace("臺", "台") === d.properties.COUNTYNAME
+      );
+      return `${d.properties.COUNTYNAME} ${foundData ? foundData.count : 0}人`;
+    });
   
 
   svg.append("g");
@@ -156,23 +132,7 @@ LivePlace_counts.flatMap((item, index) => ([
 ]))
 )}
 
-function _14(minidata){return(
-minidata[5].value = "台中市"
-)}
-
-function _15(minidata){return(
-minidata[6].value = "台北市"
-)}
-
-function _16(minidata){return(
-minidata[7].value = "台東縣"
-)}
-
-function _defaultColor(){return(
-"#DDF2FD"
-)}
-
-function _18(md){return(
+function _14(md){return(
 md`## Requirement`
 )}
 
@@ -296,7 +256,7 @@ export default function define(runtime, observer) {
   const main = runtime.module();
   function toString() { return this.url; }
   const fileAttachments = new Map([
-    ["UserData.json", {url: new URL("./UserData.json", import.meta.url), mimeType: "application/json", toString}]
+    ["UserData.json", {url: new URL("../json/UserData.json", import.meta.url), mimeType: "application/json", toString}]
   ]);
   main.builtin("FileAttachment", runtime.fileAttachments(name => fileAttachments.get(name)));
   main.variable(observer()).define(["md"], _1);
@@ -308,18 +268,14 @@ export default function define(runtime, observer) {
   main.variable(observer("viewof strokeOpacity")).define("viewof strokeOpacity", ["Inputs"], _strokeOpacity);
   main.variable(observer("strokeOpacity")).define("strokeOpacity", ["Generators", "viewof strokeOpacity"], (G, _) => G.input(_));
   main.variable(observer("taiwan")).define("taiwan", ["taiwanMap"], _taiwan);
-  main.variable(observer("taiwanMap")).define("taiwanMap", ["d3","topojson","tw","DOM","bgColor","strokeColor","strokeOpacity","defaultColor","minidata"], _taiwanMap);
+  main.variable(observer("taiwanMap")).define("taiwanMap", ["d3","topojson","tw","DOM","bgColor","strokeColor","strokeOpacity","minidata"], _taiwanMap);
   main.variable(observer()).define(["md"], _8);
   main.variable(observer("LivePlace")).define("LivePlace", ["data"], _LivePlace);
   main.variable(observer("LivePlace_column")).define("LivePlace_column", ["data","LivePlace"], _LivePlace_column);
   main.variable(observer("LivePlace_uniqueValues")).define("LivePlace_uniqueValues", ["LivePlace_column"], _LivePlace_uniqueValues);
   main.variable(observer("LivePlace_counts")).define("LivePlace_counts", ["LivePlace_uniqueValues","LivePlace_column"], _LivePlace_counts);
   main.variable(observer("minidata")).define("minidata", ["LivePlace_counts"], _minidata);
-  main.variable(observer()).define(["minidata"], _14);
-  main.variable(observer()).define(["minidata"], _15);
-  main.variable(observer()).define(["minidata"], _16);
-  main.variable(observer("defaultColor")).define("defaultColor", _defaultColor);
-  main.variable(observer()).define(["md"], _18);
+  main.variable(observer()).define(["md"], _14);
   const child1 = runtime.module(define1);
   main.import("select", child1);
   main.variable(observer("tw")).define("tw", ["d3"], _tw);

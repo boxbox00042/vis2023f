@@ -1,11 +1,11 @@
 {
-  "name": "5cdaddeb848b8d34",
-  "main": "5cdaddeb848b8d34@93.js",
-  "version": "93.0.0",
-  "homepage": "https://observablehq.com/d/5cdaddeb848b8d34",
+  "name": "50ce4cf51d363764",
+  "main": "50ce4cf51d363764@71.js",
+  "version": "71.0.0",
+  "homepage": "https://observablehq.com/d/50ce4cf51d363764",
   "author": {
-    "name": "YEN HUNG CHENG's Workspace",
-    "url": "https://observablehq.com/@yen-hung-cheng-ws"
+    "name": "chitinnng's Workspace",
+    "url": "https://observablehq.com/@chitinnng-ws"
   },
   "type": "module",
   "peerDependencies": {
