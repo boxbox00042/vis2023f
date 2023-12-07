@@ -1,11 +1,11 @@
 {
-  "name": "50ce4cf51d363764",
-  "main": "50ce4cf51d363764@71.js",
-  "version": "71.0.0",
-  "homepage": "https://observablehq.com/d/50ce4cf51d363764",
+  "name": "34c3c66a3953791e",
+  "main": "34c3c66a3953791e@70.js",
+  "version": "70.0.0",
+  "homepage": "https://observablehq.com/d/34c3c66a3953791e",
   "author": {
-    "name": "chitinnng's Workspace",
-    "url": "https://observablehq.com/@chitinnng-ws"
+    "name": "北科大陳旻昌's Workspace",
+    "url": "https://observablehq.com/@bei-ke-da-chen-min-chang-ws"
   },
   "type": "module",
   "peerDependencies": {

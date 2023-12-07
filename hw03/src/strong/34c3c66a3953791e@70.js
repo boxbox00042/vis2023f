@@ -9,7 +9,7 @@ FileAttachment("UserData.json").json()
 )}
 
 function _bgColor(Inputs){return(
-Inputs.color({ label: "background color", value: "#dde4ee" })
+Inputs.color({ label: "background color", value: "#ffffff" })
 )}
 
 function _strokeColor(Inputs){return(
@@ -100,7 +100,7 @@ function _taiwanMap(d3,topojson,tw,DOM,bgColor,strokeColor,strokeOpacity,minidat
 )}
 
 function _8(md){return(
-md`## Parameter`
+md`# Parameter`
 )}
 
 function _LivePlace(data){return(
@@ -130,10 +130,6 @@ LivePlace_counts.flatMap((item, index) => ([
     series: 'LivePlace'
   }
 ]))
-)}
-
-function _14(md){return(
-md`## Requirement`
 )}
 
 function _tw(d3){return(
@@ -275,7 +271,6 @@ export default function define(runtime, observer) {
   main.variable(observer("LivePlace_uniqueValues")).define("LivePlace_uniqueValues", ["LivePlace_column"], _LivePlace_uniqueValues);
   main.variable(observer("LivePlace_counts")).define("LivePlace_counts", ["LivePlace_uniqueValues","LivePlace_column"], _LivePlace_counts);
   main.variable(observer("minidata")).define("minidata", ["LivePlace_counts"], _minidata);
-  main.variable(observer()).define(["md"], _14);
   const child1 = runtime.module(define1);
   main.import("select", child1);
   main.variable(observer("tw")).define("tw", ["d3"], _tw);
